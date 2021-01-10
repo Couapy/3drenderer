@@ -15,8 +15,8 @@ public class App extends Thread {
         espace.addObject(new Cube(100));
 
         // Launch the window
-        Thread window = new Thread(new Window(espace, vision));
-        window.start();
+        Window window = new Window(espace, vision);
+        window.run();
 
         // Start the application
         new App(espace, vision);
@@ -38,7 +38,7 @@ public class App extends Thread {
 
         while (true) {
             try {
-                Thread.sleep(50);
+                Thread.sleep(100);
             } catch (InterruptedException e) { }
 
             cube.rotateX(angle * 1.0);

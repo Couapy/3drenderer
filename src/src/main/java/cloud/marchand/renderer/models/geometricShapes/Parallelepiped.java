@@ -25,14 +25,14 @@ public class Parallelepiped extends Object3D {
 
         // Bottom square
         links.add(new Link3D(nodes.get(0), nodes.get(1)));
-        links.add(new Link3D(nodes.get(1), nodes.get(2)));
-        links.add(new Link3D(nodes.get(2), nodes.get(3)));
-        links.add(new Link3D(nodes.get(3), nodes.get(0)));
+        links.add(new Link3D(nodes.get(1), nodes.get(3)));
+        links.add(new Link3D(nodes.get(3), nodes.get(2)));
+        links.add(new Link3D(nodes.get(2), nodes.get(0)));
         // Top square
         links.add(new Link3D(nodes.get(4), nodes.get(5)));
-        links.add(new Link3D(nodes.get(5), nodes.get(6)));
-        links.add(new Link3D(nodes.get(6), nodes.get(7)));
-        links.add(new Link3D(nodes.get(7), nodes.get(4)));
+        links.add(new Link3D(nodes.get(5), nodes.get(7)));
+        links.add(new Link3D(nodes.get(7), nodes.get(6)));
+        links.add(new Link3D(nodes.get(6), nodes.get(4)));
         // Between squares
         links.add(new Link3D(nodes.get(0), nodes.get(4)));
         links.add(new Link3D(nodes.get(1), nodes.get(5)));
