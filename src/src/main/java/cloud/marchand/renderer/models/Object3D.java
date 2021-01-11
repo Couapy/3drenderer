@@ -11,9 +11,6 @@ public class Object3D extends Observable {
     protected List<Point3D> nodes = new ArrayList<>();
     protected List<Link3D> links = new ArrayList<>();
     protected Point3D centralPoint;
-    private double rotationX = 0.0;
-    private double rotationY = 0.0;
-    private double rotationZ = 0.0;
 
     public Object3D() {
     }
@@ -35,70 +32,55 @@ public class Object3D extends Observable {
         return centralPoint;
     }
 
-    public double getRotationX() {
-        return rotationX;
+    public void rotate(double rotationX, double rotationY, double rotationZ) {
+        rotateX(rotationX);
+        rotateY(rotationY);
+        rotateZ(rotationZ);
     }
 
-    public double getRotationY() {
-        return rotationY;
-    }
-
-    public double getRotationZ() {
-        return rotationZ;
-    }
-
-    public synchronized void rotateX(double rotationX) {
-        this.rotationX += rotationX;
-        while (this.rotationX < 0) {
-            this.rotationX += 180;
-        }
-        while (this.rotationX >= 180) {
-            this.rotationX -= 180;
-        }
-
+    public void rotateX(double rotationX) {
         Iterator<Point3D> iterator = nodes.iterator();
-        double cy = centralPoint.getY(), cz = centralPoint.getZ();
         while (iterator.hasNext()) {
             Point3D point = iterator.next();
-            point.setY((point.getY() - cy) * Math.cos(rotationX) + cy);
-            point.setZ((point.getZ() - cz) * Math.cos(rotationX) + cz);
+            point.rotateX(centralPoint, rotationX);
         }
+
+        setChanged();
+        notifyObservers();
     }
 
-    public synchronized void rotateY(double rotationY) {
-        this.rotationY += rotationY;
-        while (this.rotationX < 0) {
-            this.rotationX += 180;
-        }
-        while (this.rotationY >= 180) {
-            this.rotationY -= 180;
-        }
-
+    public void rotateY(double rotationY) {
         Iterator<Point3D> iterator = nodes.iterator();
-        double cx = centralPoint.getX(), cz = centralPoint.getZ();
         while (iterator.hasNext()) {
             Point3D point = iterator.next();
-            point.setX((point.getX() - cx) * Math.cos(rotationY) + cx);
-            point.setZ((point.getZ() - cz) * Math.cos(rotationY) + cz);
+            point.rotateY(centralPoint, rotationY);
         }
+
+        setChanged();
+        notifyObservers();
     }
 
-    public synchronized void rotateZ(double rotationZ) {
-        this.rotationZ += rotationZ;
-        while (this.rotationX < 0) {
-            this.rotationX += 180;
-        }
-        while (this.rotationZ >= 180) {
-            this.rotationZ -= 180;
-        }
-
+    public void rotateZ(double rotationZ) {
         Iterator<Point3D> iterator = nodes.iterator();
-        double cx = centralPoint.getX(), cy = centralPoint.getY();
         while (iterator.hasNext()) {
             Point3D point = iterator.next();
-            point.setX((point.getX() - cx) * Math.cos(rotationZ) + cx);
-            point.setY((point.getY() - cy) * Math.cos(rotationZ) + cy);
+            point.rotateZ(centralPoint, rotationZ);
         }
+
+        setChanged();
+        notifyObservers();
+    }
+
+    public void translate(double x, double y, double z) {
+        Iterator<Point3D> iterator = nodes.iterator();
+        while (iterator.hasNext()) {
+            Point3D point = iterator.next();
+            point.translate(x, y, z);
+        }
+        centralPoint.translate(x, y, z);
+
+        setChanged();
+        notifyObservers();
     }
 
 }

@@ -9,5 +9,5 @@ public class Cube extends Parallelepiped {
     public Cube(int width) {
         super(width, width, width);
     }
-    
+
 }

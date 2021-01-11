@@ -1,7 +1,10 @@
 package cloud.marchand.renderer;
 
+import java.util.Iterator;
+
 import cloud.marchand.renderer.models.Espace3D;
 import cloud.marchand.renderer.models.Object3D;
+import cloud.marchand.renderer.models.Point3D;
 import cloud.marchand.renderer.models.Vision3D;
 import cloud.marchand.renderer.models.geometricShapes.Cube;
 import cloud.marchand.renderer.vue.Window;
@@ -12,7 +15,9 @@ public class App extends Thread {
         // Defines the environnement
         Espace3D espace = new Espace3D();
         Vision3D vision = new Vision3D();
-        espace.addObject(new Cube(100));
+        Cube cube = new Cube(300);
+        cube.translate(100, 100, 100);
+        espace.addObject(cube);
 
         // Launch the window
         Window window = new Window(espace, vision);
@@ -33,19 +38,15 @@ public class App extends Thread {
     }
 
     public void run() {
-        double angle = 1;
         Object3D cube = espace.getObjects().get(0);
 
         while (true) {
             try {
-                Thread.sleep(100);
+                Thread.sleep(10);
             } catch (InterruptedException e) { }
 
-            cube.rotateX(angle * 1.0);
-            cube.rotateY(angle * 2.0);
-            cube.rotateZ(angle * 3.0);
-
-            System.out.print("rotationX=" + cube.getRotationX() + ", rotationY=" + cube.getRotationY() + ", rotationZ=" + cube.getRotationZ() + "\r");
+            cube.rotateZ(Math.PI/64);
+            System.out.print("\r");
         }
     }
 

@@ -7,13 +7,15 @@ import java.util.Iterator;
 
 import javax.swing.JPanel;
 
+import cloud.marchand.renderer.interfaces.Observable;
+import cloud.marchand.renderer.interfaces.Observer;
 import cloud.marchand.renderer.models.Espace3D;
 import cloud.marchand.renderer.models.Link3D;
 import cloud.marchand.renderer.models.Object3D;
 import cloud.marchand.renderer.models.Point3D;
 import cloud.marchand.renderer.models.Vision3D;
 
-public class Canvas extends JPanel {
+public class Canvas extends JPanel implements Observer {
 
     public static final int NODE_THICKNESS = 5;
 
@@ -25,8 +27,14 @@ public class Canvas extends JPanel {
         this.espace = espace;
         this.vision = vision;
         setBackground(Color.BLACK);
+
+        Iterator<Object3D> iterator = espace.getObjects().iterator();
+        while (iterator.hasNext()) {
+            Object3D object = iterator.next();
+            object.addObserver(this);
+        }
     }
-    
+
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
 
@@ -60,8 +68,14 @@ public class Canvas extends JPanel {
 
     private Point getIntersectionVision(Point3D point) {
         // TODO: donner l'intersection du plan de vision avec la droite oeil-point
-        return new Point((int) point.getX(), (int) point.getY());
-    } 
+        return new Point((int) point.getX() + 500, (int) point.getY());
+    }
+
+    @Override
+    public void update(Observable observable, String arg) {
+        revalidate();
+        repaint();
+    }
 
     /**
      * TODO
