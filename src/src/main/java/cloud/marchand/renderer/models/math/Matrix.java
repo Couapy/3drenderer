@@ -66,22 +66,4 @@ public class Matrix {
         return result.substring(0, result.length()-1);
     }
 
-    public static void main(String[] args) {
-        double[][] firstMatrix = {
-            new double[]{1d, 3d},
-            new double[]{2d, 5d}
-        };
-
-        double[][] secondMatrix = {
-            new double[]{0d},
-            new double[]{3d}
-        };
-
-        Matrix a = new Matrix(firstMatrix);
-        Matrix b = new Matrix(secondMatrix);
-        Matrix c = a.multiply(b);
-
-        System.out.println(c);
-    }
-
 }
