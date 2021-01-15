@@ -19,13 +19,21 @@ public class Window extends Thread {
     private Vision3D vision;
     private Canvas canvas;
 
+    private int FRAME_TIME = 0;
+
     public Window(Espace3D espace, Vision3D vision) {
         setName("WINDOW");
         this.espace = espace;
         this.vision = vision;
-        initialize();
     }
 
+    public Window(Espace3D espace, Vision3D vision, int fps) {
+        this(espace, vision);
+        if (fps > 0) {
+            FRAME_TIME = 1000 / fps;
+        }
+    }
+    
     private void initialize() {
         // Configurate the window
         this.frame = new JFrame();
@@ -37,27 +45,28 @@ public class Window extends Thread {
         frame.setResizable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setBackground(Color.BLACK);
-
+        
         // Add components to the frame
         this.canvas = new Canvas(espace, vision);
         canvas.addOverlay(new Skybox());
         canvas.addOverlay(new SkeletonDrawing());
         canvas.addOverlay(new FPSCounter());
         frame.add(canvas);
-
+        
         // Add controllers
         frame.addComponentListener(new WindowResizeController(this));
     }
-
+    
     @Override
     public void run() {
+        initialize();
         System.out.println("[INFO][WINDOW] Window started.");
         frame.setVisible(true);
         while (true) {
-            // try {
-            //     Thread.sleep(10);
-            // } catch (InterruptedException e) {
-            // }
+            try {
+                Thread.sleep(FRAME_TIME);
+            } catch (InterruptedException e) {
+            }
             frame.revalidate();
             frame.repaint();
         }

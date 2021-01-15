@@ -9,11 +9,17 @@ import cloud.marchand.renderer.vue.Window;
 
 public class App extends Thread {
 
+    /**
+     * Limit frame rate for the window.
+     * Set to 0 or less to disable limit.
+     */
+    private static int FPS_LIMIT = 144;
+    
+    private boolean running = false;
+
     public static void main(String[] args) {
         new App();
     }
-
-    private boolean running = false;
 
     public App() {
         running = true;
@@ -30,7 +36,7 @@ public class App extends Thread {
         espace.addObject(cube);
 
         // Create visualizer
-        Window window = new Window(espace, vision);
+        Window window = new Window(espace, vision, FPS_LIMIT);
         window.start();
 
         int pasX = 1, pasY = 2, pasZ = 3, longueur = 0, longueurParcours = 200;
