@@ -1,86 +1,72 @@
 package cloud.marchand.renderer.models;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import cloud.marchand.renderer.models.math.Vector3D;
 
-import cloud.marchand.renderer.interfaces.Observable;
+public class Object3D {
 
-public class Object3D extends Observable {
+    protected Vector3D[] nodes;
+    protected Link3D[] links;
+    protected Face3D[] faces;
 
-    protected List<Point3D> nodes = new ArrayList<>();
-    protected List<Link3D> links = new ArrayList<>();
-    protected Point3D centralPoint;
+    protected Vector3D centralPoint;
 
     public Object3D() {
+        nodes = new Vector3D[0];
+        links = new Link3D[0];
+        faces = new Face3D[0];
     }
 
-    public Object3D(List<Point3D> nodes, List<Link3D> links) {
-        this.nodes = nodes;
-        this.links = links;
+    public Object3D(Vector3D[] nodes, Link3D[] links, Face3D[] faces, Vector3D centralPoint) {
+        this.setNodes(nodes);
+        this.setLinks(links);
+        this.setFaces(faces);
+        this.setCentralPoint(centralPoint);
     }
 
-    public List<Point3D> getNodes() {
-        return nodes;
-    }
-
-    public List<Link3D> getLinks() {
-        return links;
-    }
-
-    public Point3D getCentralPoint() {
-        return centralPoint;
+    public void translate(double translationX, double translationY, double translationZ) {
+        for (int i = 0; i < nodes.length; i++) {
+            nodes[i].translate(translationX, translationY, translationZ);
+         }
+         centralPoint.translate(translationX, translationY, translationZ);
     }
 
     public void rotate(double rotationX, double rotationY, double rotationZ) {
-        rotateX(rotationX);
-        rotateY(rotationY);
-        rotateZ(rotationZ);
-    }
-
-    public void rotateX(double rotationX) {
-        Iterator<Point3D> iterator = nodes.iterator();
-        while (iterator.hasNext()) {
-            Point3D point = iterator.next();
-            point.rotateX(centralPoint, rotationX);
+        for (int i = 0; i < nodes.length; i++) {
+           nodes[i].rotate(centralPoint, rotationX, rotationY, rotationZ);
         }
-
-        setChanged();
-        notifyObservers();
+        centralPoint.rotate(centralPoint, rotationX, rotationY, rotationZ);
     }
 
-    public void rotateY(double rotationY) {
-        Iterator<Point3D> iterator = nodes.iterator();
-        while (iterator.hasNext()) {
-            Point3D point = iterator.next();
-            point.rotateY(centralPoint, rotationY);
-        }
-
-        setChanged();
-        notifyObservers();
+    public Vector3D[] getNodes() {
+        return nodes;
     }
 
-    public void rotateZ(double rotationZ) {
-        Iterator<Point3D> iterator = nodes.iterator();
-        while (iterator.hasNext()) {
-            Point3D point = iterator.next();
-            point.rotateZ(centralPoint, rotationZ);
-        }
-
-        setChanged();
-        notifyObservers();
+    public Link3D[] getLinks() {
+        return links;
     }
 
-    public void translate(double x, double y, double z) {
-        Iterator<Point3D> iterator = nodes.iterator();
-        while (iterator.hasNext()) {
-            Point3D point = iterator.next();
-            point.translate(x, y, z);
-        }
-        centralPoint.translate(x, y, z);
-
-        setChanged();
-        notifyObservers();
+    public Face3D[] getFaces() {
+        return faces;
     }
 
+    public Vector3D getCentralPoint() {
+        return centralPoint;
+    }
+
+    public void setNodes(Vector3D[] nodes) {
+        this.nodes = nodes;
+    }
+
+    public void setLinks(Link3D[] links) {
+        this.links = links;
+    }
+
+    public void setFaces(Face3D[] faces) {
+        this.faces = faces;
+    }
+
+    public void setCentralPoint(Vector3D centralPoint) {
+        this.centralPoint = centralPoint;
+    }
+    
 }

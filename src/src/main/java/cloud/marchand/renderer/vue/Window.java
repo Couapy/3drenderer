@@ -2,17 +2,17 @@ package cloud.marchand.renderer.vue;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ComponentEvent;
 
 import javax.swing.JFrame;
 
-import cloud.marchand.renderer.interfaces.Observable;
-import cloud.marchand.renderer.interfaces.Observer;
 import cloud.marchand.renderer.models.Espace3D;
 import cloud.marchand.renderer.models.Vision3D;
 import cloud.marchand.renderer.vue.controller.WindowResizeController;
+import cloud.marchand.renderer.vue.overlays.FPSCounter;
+import cloud.marchand.renderer.vue.overlays.SkeletonDrawing;
+import cloud.marchand.renderer.vue.overlays.Skybox;
 
-public class Window extends Thread implements Observer {
+public class Window extends Thread {
 
     private JFrame frame;
     private Espace3D espace;
@@ -30,6 +30,7 @@ public class Window extends Thread implements Observer {
         // Configurate the window
         this.frame = new JFrame();
         frame.setTitle("3D Renderer");
+        frame.setSize(900, 900);
         frame.setMinimumSize(new Dimension(480, 480));
         frame.setMaximumSize(new Dimension(2560, 1440));
         frame.setLayout(null);
@@ -39,22 +40,32 @@ public class Window extends Thread implements Observer {
 
         // Add components to the frame
         this.canvas = new Canvas(espace, vision);
+        canvas.addOverlay(new Skybox());
+        canvas.addOverlay(new SkeletonDrawing());
+        canvas.addOverlay(new FPSCounter());
         frame.add(canvas);
-        canvas.setBackground(Color.BLACK);
 
         // Add controllers
         frame.addComponentListener(new WindowResizeController(this));
     }
 
     @Override
-    public void update(Observable observable, String arg) {
-        // TODO Auto-generated method stub
-
+    public void run() {
+        System.out.println("[INFO][WINDOW] Window started.");
+        frame.setVisible(true);
+        while (true) {
+            // try {
+            //     Thread.sleep(10);
+            // } catch (InterruptedException e) {
+            // }
+            frame.revalidate();
+            frame.repaint();
+        }
     }
 
-    @Override
-    public void run() {
-        frame.setVisible(true);
+    public void update() {
+        frame.revalidate();
+        frame.repaint();
     }
 
     public JFrame getFrame() {

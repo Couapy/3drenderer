@@ -1,7 +1,5 @@
 package cloud.marchand.renderer.models;
 
-import cloud.marchand.renderer.interfaces.Observable;
-
-public class Player extends Observable {
+public class Player {
     // TODO: player
 }

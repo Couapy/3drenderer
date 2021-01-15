@@ -1,53 +1,67 @@
 package cloud.marchand.renderer;
 
-import java.util.Iterator;
 
 import cloud.marchand.renderer.models.Espace3D;
-import cloud.marchand.renderer.models.Object3D;
-import cloud.marchand.renderer.models.Point3D;
 import cloud.marchand.renderer.models.Vision3D;
 import cloud.marchand.renderer.models.geometricShapes.Cube;
+import cloud.marchand.renderer.models.math.Vector3D;
 import cloud.marchand.renderer.vue.Window;
 
 public class App extends Thread {
 
     public static void main(String[] args) {
-        // Defines the environnement
-        Espace3D espace = new Espace3D();
-        Vision3D vision = new Vision3D();
-        Cube cube = new Cube(300);
-        cube.translate(100, 100, 100);
-        espace.addObject(cube);
-
-        // Launch the window
-        Window window = new Window(espace, vision);
-        window.run();
-
-        // Start the application
-        new App(espace, vision);
+        new App();
     }
 
-    private Espace3D espace;
-    private Vision3D vision;
+    private boolean running = false;
 
-    public App(Espace3D espace, Vision3D vision) {
-        System.out.println("[INFO][APP] Application started.");
-        this.espace = espace;
-        this.vision = vision;
+    public App() {
+        running = true;
         this.start();
     }
 
     public void run() {
-        Object3D cube = espace.getObjects().get(0);
+        System.out.println("[INFO][APP] Application started.");
+        // Create 3D espace
+        Espace3D espace = new Espace3D();
+        Vision3D vision = new Vision3D(new Vector3D(1000, 1000, 1000), 0, 90, 0);
+        Cube cube = new Cube(300);
+        cube.translate(100, 100, 0);
+        espace.addObject(cube);
 
-        while (true) {
+        // Create visualizer
+        Window window = new Window(espace, vision);
+        window.start();
+
+        int pasX = 1, pasY = 2, pasZ = 3, longueur = 0, longueurParcours = 200;
+        boolean sensPositif = true;
+        while (running) {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) { }
 
-            cube.rotateZ(Math.PI/64);
-            System.out.print("\r");
+            if (sensPositif) {
+                cube.translate(pasX, pasY, pasZ);
+                longueur++;
+                if (longueur == longueurParcours) {
+                    sensPositif = false;
+                }
+            }
+            else {
+                cube.translate(-pasX, -pasY, -pasZ);
+                longueur--;
+                if (longueur == 0) {
+                    sensPositif = true;
+                }
+            }
+
+            // cube.rotate(Math.PI/64, Math.PI/48, Math.PI/36);
         }
+        System.out.println("[INFO][APP] Application stopped.");
+    }
+
+    public void close() {
+        running = false;
     }
 
 }

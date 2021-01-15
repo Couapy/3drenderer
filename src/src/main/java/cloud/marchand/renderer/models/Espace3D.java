@@ -3,9 +3,7 @@ package cloud.marchand.renderer.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import cloud.marchand.renderer.interfaces.Observable;
-
-public class Espace3D extends Observable {
+public class Espace3D {
 
     private List<Object3D> objects = new ArrayList<>();
     private List<Player> players = new ArrayList<>();
@@ -17,6 +15,7 @@ public class Espace3D extends Observable {
         this.objects = objects;
         this.players = players;
     }
+
     public List<Object3D> getObjects() {
         return objects;
     }

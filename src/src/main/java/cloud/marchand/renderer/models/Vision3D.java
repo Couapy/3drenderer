@@ -1,47 +1,50 @@
 package cloud.marchand.renderer.models;
 
-public class Vision3D extends Point3D {
+import cloud.marchand.renderer.models.math.Vector3D;
 
-    /**
-     * Angles d'orientation de la vue
-     */
-    private double angleX;
-    private double angleY;
-    
-    /**
-     * Angle du champ de vision de la vue
-     */
+public class Vision3D extends Vector3D {
+
     private double angleVisionX;
     private double angleVisionY;
+    private double angleVisionZ;
 
     public Vision3D() {
         super(0, 0, 0);
     }
 
-    public Vision3D(Point3D origine) {
+    public Vision3D(Vector3D origine) {
         super(origine.getX(), origine.getY(), origine.getZ());
     }
 
-    public Vision3D(Point3D origine, double angleX, double angleY) {
+    public Vision3D(Vector3D origine, double angleVisionX, double angleVisionY, double angleVisionZ) {
         this(origine);
-        this.setAngleX(angleX);
-        this.setAngleY(angleY);
+        this.setAngleVisionX(angleVisionX);
+        this.setAngleVisionY(angleVisionY);
+        this.setAngleVisionZ(angleVisionZ);
     }
 
-    public double getAngleY() {
-        return angleY;
+    public double getAngleVisionX() {
+        return angleVisionX;
     }
 
-    public void setAngleY(double angleY) {
-        this.angleY = angleY;
+    public double getAngleVisionY() {
+        return angleVisionY;
     }
 
-    public double getAngleX() {
-        return angleX;
+    public double getAngleVisionZ() {
+        return angleVisionZ;
     }
 
-    public void setAngleX(double angleX) {
-        this.angleX = angleX;
+    public void setAngleVisionX(double angleVisionX) {
+        this.angleVisionX = angleVisionX;
+    }
+
+    public void setAngleVisionY(double angleVisionY) {
+        this.angleVisionY = angleVisionY;
+    }
+
+    public void setAngleVisionZ(double angleVisionZ) {
+        this.angleVisionZ = angleVisionZ;
     }
 
 }

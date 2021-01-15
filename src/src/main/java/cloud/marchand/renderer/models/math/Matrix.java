@@ -2,9 +2,9 @@ package cloud.marchand.renderer.models.math;
 
 public class Matrix {
 
-    private double[][] matrix;
-    private int rows;
-    private int cols;
+    protected double[][] matrix;
+    protected int rows;
+    protected int cols;
 
     public Matrix() {
         this(1, 1);
@@ -22,25 +22,25 @@ public class Matrix {
         this.cols = matrix[0].length;
     }
 
-    public Matrix multiply(Matrix m) {
-        if (cols != m.getRows()) {
-            System.out.println("Les matrices n'ont pas les mêmes tailles :");
-            System.out.println("  - " + rows + "x" + cols);
-            System.out.println("  - " + m.getRows() + "x" + m.getCols());
+    protected static double[][] multiply(double[][] matrixA, double[][] matrixB) {
+        if (matrixA[0].length != matrixB.length) {
             return null;
         }
-        double[][] matrixB = m.getMatrix();
-        double[][] result = new double[rows][m.getCols()];
+        double[][] result = new double[matrixA.length][matrixB[0].length];
         for (int x = 0; x < result.length; x++) {
             for (int y = 0; y < result[0].length; y++) {
                 double sum = 0d;
-                for (int k = 0; k < cols; k++) {
-                    sum += matrix[x][k] * matrixB[k][y];
+                for (int k = 0; k < matrixA[0].length; k++) {
+                    sum += matrixA[x][k] * matrixB[k][y];
                 }
                 result[x][y] = sum;
             }
         }
-        return new Matrix(result);
+        return result;
+    }
+
+    public double[][] multiply(double[][] matrix) {
+        return multiply(matrix, this.matrix);
     }
 
     public double[][] getMatrix() {
@@ -53,6 +53,12 @@ public class Matrix {
 
     public int getCols() {
         return cols;
+    }
+
+    public void set(Matrix m) {
+        matrix = m.getMatrix();
+        m.rows = m.getRows();
+        m.cols = m.getCols();
     }
 
     public String toString() {
