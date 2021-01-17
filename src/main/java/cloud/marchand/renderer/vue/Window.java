@@ -6,7 +6,9 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 
 import cloud.marchand.renderer.models.Espace3D;
+import cloud.marchand.renderer.App;
 import cloud.marchand.renderer.models.Camera;
+import cloud.marchand.renderer.vue.controller.KeyboardController;
 import cloud.marchand.renderer.vue.controller.WindowResizeController;
 import cloud.marchand.renderer.vue.overlays.FPSCounter;
 import cloud.marchand.renderer.vue.overlays.SkeletonDrawing;
@@ -21,6 +23,11 @@ public class Window extends Thread {
      * Window object.
      */
     private JFrame frame;
+
+    /**
+     * Main application.
+     */
+    private App app;
 
     /**
      * 3D space to represent.
@@ -45,23 +52,26 @@ public class Window extends Thread {
 
     /**
      * Create a new window from a point of view.
+     * @param app application related to this window
      * @param espace 3D space to represent
      * @param camera point to view to draw the 3D space
      */
-    public Window(Espace3D espace, Camera camera) {
+    public Window(App app, Espace3D espace, Camera camera) {
         setName("WINDOW");
+        this.app = app;
         this.espace = espace;
         this.camera = camera;
     }
 
     /**
      * Create a new window from a point of view.
+     * @param app application related to this window
      * @param espace 3D space to represent
      * @param camera point to view to draw the 3D space
      * @param fps limit of max fps
      */
-    public Window(Espace3D espace, Camera camera, int fps) {
-        this(espace, camera);
+    public Window(App app, Espace3D espace, Camera camera, int fps) {
+        this(app, espace, camera);
         if (fps > 0) {
             FRAME_TIME = 1000 / fps;
         }
@@ -91,6 +101,7 @@ public class Window extends Thread {
         
         // Add controllers
         frame.addComponentListener(new WindowResizeController(this));
+        frame.addKeyListener(new KeyboardController(app));
     }
     
     /**
@@ -99,9 +110,8 @@ public class Window extends Thread {
     @Override
     public void run() {
         initialize();
-        System.out.println("[INFO][WINDOW] Window started.");
         frame.setVisible(true);
-        while (true) {
+        while (app.isRunning()) {
             try {
                 Thread.sleep(FRAME_TIME);
             } catch (InterruptedException e) {

@@ -15,7 +15,9 @@ public class Face3D {
     /**
      * Create a face from points.
      * 
-     * @param nodes points to connect
+     * @param node1 first point
+     * @param node2 second point
+     * @param node3 third point
      */
     public Face3D(Vector3D node1, Vector3D node2, Vector3D node3) {
         nodes = new Vector3D[] { node1, node2, node3 };

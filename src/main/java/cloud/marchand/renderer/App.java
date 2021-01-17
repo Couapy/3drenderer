@@ -16,7 +16,7 @@ public class App {
      * Limit frame rate for the window.
      * Set to 0 or less to disable limit.
      */
-    private static int FPS_LIMIT = 144;
+    private static int FPS_LIMIT = 0;
     
     /**
      * Indicate if the thread must run or not
@@ -36,7 +36,6 @@ public class App {
      */
     public App() {
         running = true;
-        System.out.println("[INFO][APP] Application started.");
 
         // Create 3D espace
         Espace3D espace = new Espace3D();
@@ -46,12 +45,12 @@ public class App {
         espace.addObject(object);
 
         // Create visualizer
-        Window window = new Window(espace, camera, FPS_LIMIT);
+        Window window = new Window(this, espace, camera, FPS_LIMIT);
         window.start();
 
         int pasX = 5, pasY = 2, pasZ = 3, longueur = 0, longueurParcours = 200;
         boolean sensPositif = true;
-        while (running) {
+        while (isRunning()) {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) { }
@@ -74,8 +73,7 @@ public class App {
             // object.rotate(Math.PI/64, Math.PI/48, Math.PI/36);
         }
 
-        window.interrupt();
-        System.out.println("[INFO][APP] Application stopped.");
+        window.getFrame().dispose();
     }
 
     /**
@@ -84,5 +82,13 @@ public class App {
     public void close() {
         running = false;
     }
+
+    /**
+     * Indicate if the application is running
+     * @return true if the application is running
+     */
+	public boolean isRunning() {
+		return running;
+	}
 
 }

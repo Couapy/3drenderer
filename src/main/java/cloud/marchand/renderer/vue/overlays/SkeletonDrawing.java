@@ -74,7 +74,6 @@ public class SkeletonDrawing extends Overlay {
             {0, alpha, 0}
         };
         double[][] result = point.multiply(projection);
-        System.out.print(result[0][0] * 1000 + " " + result[1][0] * 1000 + "\r");
         return new Point((int) (result[0][0] * 1000), (int) (result[1][0] * 1000));
     }
     
