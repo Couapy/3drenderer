@@ -13,11 +13,6 @@ public class Object3D {
     protected Vector3D[] nodes;
 
     /**
-     * Edges of the object.
-     */
-    protected Link3D[] links;
-
-    /**
      * Faces of the object.
      */
     protected Face3D[] faces;
@@ -33,20 +28,18 @@ public class Object3D {
      */
     protected Object3D() {
         nodes = new Vector3D[0];
-        links = new Link3D[0];
         faces = new Face3D[0];
+        centralPoint = new Vector3D(0, 0, 0);
     }
 
     /**
      * Create object from definitions.
      * @param nodes 3D point array
-     * @param links link array
      * @param faces face array
      * @param centralPoint central point of the object
      */
-    public Object3D(Vector3D[] nodes, Link3D[] links, Face3D[] faces, Vector3D centralPoint) {
+    public Object3D(Vector3D[] nodes, Face3D[] faces, Vector3D centralPoint) {
         this.nodes = nodes;
-        this.links = links;
         this.faces = faces;
         this.centralPoint = centralPoint;
     }
@@ -83,14 +76,6 @@ public class Object3D {
      */
     public Vector3D[] getNodes() {
         return nodes;
-    }
-
-    /**
-     * Give the links of the object.
-     * @return link array
-     */
-    public Link3D[] getLinks() {
-        return links;
     }
 
     /**

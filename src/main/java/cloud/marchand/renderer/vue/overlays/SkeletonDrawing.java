@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 import cloud.marchand.renderer.interfaces.Overlay;
 import cloud.marchand.renderer.models.Espace3D;
-import cloud.marchand.renderer.models.Link3D;
+import cloud.marchand.renderer.models.Face3D;
 import cloud.marchand.renderer.models.Object3D;
 import cloud.marchand.renderer.models.Camera;
 import cloud.marchand.renderer.models.math.Vector3D;
@@ -38,24 +38,36 @@ public class SkeletonDrawing extends Overlay {
 
     private void drawObject(Graphics graphics, Object3D object, Camera camera) {
         Vector3D[] nodes = object.getNodes();
-        Link3D[] links = object.getLinks();
+        Face3D[] faces = object.getFaces();
 
         graphics.setColor(LINK_COLOR);
-        for (int i = 0; i < links.length; i++) {
-            Point pointcamera1 = getIntersectioncamera(links[i].getNode1(), camera);
-            Point pointcamera2 = getIntersectioncamera(links[i].getNode2(), camera);
-            graphics.drawLine((int) pointcamera1.getX(), (int) pointcamera1.getY(), (int) pointcamera2.getX(), (int) pointcamera2.getY());
+        for (int i = 0; i < faces.length; i++) {
+            drawFace(graphics, faces[i], camera);
         }
 
         graphics.setColor(NODE_COLOR);
         for (int i = 0; i < nodes.length; i++) {
-            Point pointcamera = getIntersectioncamera(nodes[i], camera);
+            Point pointcamera = getIntersectionCamera(nodes[i], camera);
             graphics.drawOval((int) pointcamera.getX() - NODE_THICKNESS/2, (int) pointcamera.getY() - NODE_THICKNESS/2, NODE_THICKNESS, NODE_THICKNESS);
         }
     }
 
-    private Point getIntersectioncamera(Vector3D point, Camera camera) {
-        double distance = 3000; // point.distance(camera)
+    private void drawFace(Graphics graphics, Face3D face, Camera camera) {
+        Vector3D[] nodes = face.getNodes();
+        int[] xPoints = new int[nodes.length];
+        int[] yPoints = new int[nodes.length];
+
+        for (int i = 0; i < nodes.length; i++) {
+            Point point = getIntersectionCamera(nodes[i], camera);
+            xPoints[i] = (int) point.getX();
+            yPoints[i] = (int) point.getY();
+        }
+
+        graphics.drawPolygon(xPoints, yPoints, nodes.length);
+    }
+
+    private Point getIntersectionCamera(Vector3D point, Camera camera) {
+        double distance = 2000; // point.distance(camera)
         double alpha = 1 / (distance - point.getZ());
         double[][] projection = {
             {alpha, 0, 0},

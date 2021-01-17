@@ -49,7 +49,7 @@ public class App {
         Window window = new Window(espace, camera, FPS_LIMIT);
         window.start();
 
-        int pasX = 1, pasY = 2, pasZ = 3, longueur = 0, longueurParcours = 200;
+        int pasX = 5, pasY = 2, pasZ = 3, longueur = 0, longueurParcours = 200;
         boolean sensPositif = true;
         while (running) {
             try {
