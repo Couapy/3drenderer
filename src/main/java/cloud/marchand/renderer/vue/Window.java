@@ -8,7 +8,11 @@ import javax.swing.JFrame;
 import cloud.marchand.renderer.models.Espace3D;
 import cloud.marchand.renderer.App;
 import cloud.marchand.renderer.models.Camera;
+import cloud.marchand.renderer.vue.controller.FileDropController;
 import cloud.marchand.renderer.vue.controller.KeyboardController;
+import cloud.marchand.renderer.vue.controller.MouseController;
+import cloud.marchand.renderer.vue.controller.MouseMotionController;
+import cloud.marchand.renderer.vue.controller.MouseWheelController;
 import cloud.marchand.renderer.vue.controller.WindowResizeController;
 import cloud.marchand.renderer.vue.overlays.FPSCounter;
 import cloud.marchand.renderer.vue.overlays.SkeletonDrawing;
@@ -102,6 +106,10 @@ public class Window extends Thread {
         // Add controllers
         frame.addComponentListener(new WindowResizeController(this));
         frame.addKeyListener(new KeyboardController(app));
+        frame.addMouseListener(new MouseController());
+        frame.addMouseMotionListener(new MouseMotionController());
+        frame.addMouseWheelListener(new MouseWheelController());
+        frame.setTransferHandler(new FileDropController(espace));
     }
     
     /**

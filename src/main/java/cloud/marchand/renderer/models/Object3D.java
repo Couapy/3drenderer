@@ -71,6 +71,17 @@ public class Object3D {
     }
 
     /**
+     * Scale the object size
+     * @param scale size factor
+     */
+    public void scale(double scale) {
+        for (int i = 0; i < nodes.length; i++) {
+            nodes[i].scale(scale);
+        }
+        centralPoint.scale(scale);
+    }
+
+    /**
      * Give the nodes of the object.
      * @return node array
      */

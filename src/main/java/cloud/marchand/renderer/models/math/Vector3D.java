@@ -117,6 +117,16 @@ public class Vector3D extends Matrix {
     }
 
     /**
+     * Scale the vector size
+     * @param scale size factor
+     */
+    public void scale(double scale) {
+        matrix[0][0] *= scale;
+        matrix[1][0] *= scale;
+        matrix[2][0] *= scale;
+    }
+
+    /**
      * Calculate distance between this vector and another.
      * @param vector other vector to calculate the distance between them
      * @return the distance between them
