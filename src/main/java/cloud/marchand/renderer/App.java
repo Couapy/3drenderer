@@ -1,5 +1,8 @@
 package cloud.marchand.renderer;
 
+import java.awt.event.KeyEvent;
+import java.util.HashMap;
+
 import cloud.marchand.renderer.models.Camera;
 import cloud.marchand.renderer.models.Espace3D;
 import cloud.marchand.renderer.models.Object3D;
@@ -24,6 +27,16 @@ public class App {
     private boolean running = false;
 
     /**
+     * Defines the settings of the application.
+     */
+    private HashMap<String, Integer> settings = new HashMap<>();
+
+    /**
+     * Indicate which key is pressed.
+     */
+    private HashMap<Integer, Boolean> keyPressed = new HashMap<>();
+
+    /**
      * Main program entry
      * 
      * @param args execution arguments
@@ -36,6 +49,7 @@ public class App {
      * Execute the application
      */
     public App() {
+        configure();
         running = true;
 
         // Create 3D espace
@@ -49,19 +63,20 @@ public class App {
             object = new Parallelepiped(300, 150, 200);
             e.printStackTrace();
         }
-        object.translate(100, 100, 0);
         espace.addObject(object);
+
 
         // Create visualizer
         Window window = new Window(this, espace, camera, FPS_LIMIT);
         window.start();
-
-        int pasX = 5, pasY = 2, pasZ = 3, longueur = 0, longueurParcours = 200;
+        
+        int pasX = 5, pasY = 2, pasZ = 3, longueur = 0, longueurParcours = 100;
         boolean sensPositif = true;
         while (isRunning()) {
             try {
                 Thread.sleep(10);
-            } catch (InterruptedException e) { }
+            } catch (InterruptedException e) {
+            }
 
             if (sensPositif) {
                 object.translate(pasX, pasY, pasZ);
@@ -77,11 +92,77 @@ public class App {
                     sensPositif = true;
                 }
             }
+            object.rotate(Math.PI/128, Math.PI/196, Math.PI/256);
 
-            // object.rotate(Math.PI/64, Math.PI/48, Math.PI/36);
+            if (isPressed("forward")) {
+                object.translate(10, 0, 0);
+            }
+            if (isPressed("backward")) {
+                object.translate(-10, 0, 0);
+            }
+            if (isPressed("left")) {
+                object.translate(0, 10, 0);
+            }
+            if (isPressed("right")) {
+                object.translate(0, -10, 0);
+            }
+            if (isPressed("up")) {
+                object.translate(0, 0, 10);
+            }
+            if (isPressed("down")) {
+                object.translate(0, 0, -10);
+            }
+
+            if (isPressed("rotateX")) {
+                object.rotate(Math.PI/32, 0, 0);
+            }
+            if (isPressed("rotateY")) {
+                object.rotate(0, Math.PI/32, 0);
+            }
+            if (isPressed("rotateZ")) {
+                object.rotate(0, 0, Math.PI/32);
+            }
+
         }
 
         window.getFrame().dispose();
+    }
+
+    /**
+     * Configure the settings.
+     */
+    private void configure() {
+        settings.put("forward", KeyEvent.VK_Z);
+        settings.put("backward", KeyEvent.VK_S);
+        settings.put("left", KeyEvent.VK_Q);
+        settings.put("right", KeyEvent.VK_D);
+        settings.put("up", KeyEvent.VK_SHIFT);
+        settings.put("down", KeyEvent.VK_SPACE);
+        settings.put("rotateX", KeyEvent.VK_LEFT);
+        settings.put("rotateY", KeyEvent.VK_DOWN);
+        settings.put("rotateZ", KeyEvent.VK_RIGHT);
+
+        for (Integer key: settings.values()) {
+            keyPressed.put(key, false);
+        }
+    }
+
+    /**
+     * Indicate if the key is pressed.
+     * @param key key code
+     * @return true if the key is pressed, false if not
+     */
+    private boolean isPressed(String key) {
+        return keyPressed.get(settings.get(key));
+    }
+
+    /**
+     * Defines if a key is pressed
+     * @param key key code
+     * @param pressed true if the key is pressed, false if not
+     */
+    public void setPressed(Integer key, Boolean pressed) {
+        keyPressed.put(key, pressed);
     }
 
     /**

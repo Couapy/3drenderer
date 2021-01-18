@@ -12,12 +12,8 @@ import cloud.marchand.renderer.models.Espace3D;
 import cloud.marchand.renderer.models.Object3D;
 import cloud.marchand.renderer.util.ResourceLoader;
 
+@SuppressWarnings("serial")
 public class FileDropController extends TransferHandler {
-
-    /**
-     * Usefull for the serialisation.
-     */
-    private static final long serialVersionUID = 1949529325553614313L;
 
     private Espace3D espace;
 

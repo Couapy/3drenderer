@@ -68,13 +68,14 @@ public class SkeletonDrawing extends Overlay {
 
     private Point getIntersectionCamera(Vector3D point, Camera camera) {
         double distance = 2000; // point.distance(camera)
+        distance = point.distance(camera);
         double alpha = 1 / (distance - point.getZ());
         double[][] projection = {
             {alpha, 0, 0},
             {0, alpha, 0}
         };
         double[][] result = point.multiply(projection);
-        return new Point((int) (result[0][0] * 1000), (int) (result[1][0] * 1000));
+        return new Point((int) (result[0][0] * 1000 + 200), (int) (result[1][0] * 1000 + 200));
     }
     
 }

@@ -39,7 +39,9 @@ public class KeyboardController implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             application.close();
+            return;
         }
+        application.setPressed(e.getKeyCode(), true);
     }
 
     /**
@@ -48,6 +50,7 @@ public class KeyboardController implements KeyListener {
      */
     @Override
     public void keyReleased(KeyEvent e) {
+        application.setPressed(e.getKeyCode(), false);
     }
     
 }

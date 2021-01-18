@@ -15,13 +15,8 @@ import cloud.marchand.renderer.models.Camera;
 /**
  * Drawing zone for 3D space.
  */
+@SuppressWarnings("serial")
 public class Canvas extends JPanel {
-
-    /**
-     * Useful for the serialisation.
-     * But object not serialized, present for avoid warning message.
-     */
-    private static final long serialVersionUID = -3586206390830967265L;
 
     /**
      * 3D space to represent.
