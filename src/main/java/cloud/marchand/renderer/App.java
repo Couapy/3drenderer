@@ -1,5 +1,6 @@
 package cloud.marchand.renderer;
 
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
@@ -37,101 +38,59 @@ public class App {
     private HashMap<Integer, Boolean> keyPressed = new HashMap<>();
 
     /**
+     * 3D space.
+     */
+    private Espace3D espace;
+
+    /**
+     * Point of view.
+     */
+    private Camera camera;
+
+    /**
+     * Graphical interface.
+     */
+    private Window window;
+
+    /**
      * Main program entry
      * 
      * @param args execution arguments
      */
     public static void main(String[] args) {
-        new App();
+        App app = new App();
+        app.run();
     }
 
     /**
      * Execute the application
      */
     public App() {
-        configure();
+        // Initialize the application
+        configureSettings();
         running = true;
 
         // Create 3D espace
-        Espace3D espace = new Espace3D();
-        Camera camera = new Camera(new Vector3D(1000, 1000, 1000), 0, 90, 0);
+        espace = new Espace3D();
+        camera = new Camera(new Vector3D(1000, 1000, 1000), 90, 90, 90);
         Object3D object;
         try {
             object = ResourceLoader.getObject("objects/ship.obj");
-            object.scale(100d);
+            object.scale(0.1d);
         } catch (Exception e) {
             object = new Parallelepiped(300, 150, 200);
             e.printStackTrace();
         }
         espace.addObject(object);
 
-
         // Create visualizer
-        Window window = new Window(this, espace, camera, FPS_LIMIT);
-        window.start();
-        
-        int pasX = 5, pasY = 2, pasZ = 3, longueur = 0, longueurParcours = 100;
-        boolean sensPositif = true;
-        while (isRunning()) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-            }
-
-            if (sensPositif) {
-                object.translate(pasX, pasY, pasZ);
-                longueur++;
-                if (longueur == longueurParcours) {
-                    sensPositif = false;
-                }
-            }
-            else {
-                object.translate(-pasX, -pasY, -pasZ);
-                longueur--;
-                if (longueur == 0) {
-                    sensPositif = true;
-                }
-            }
-            object.rotate(Math.PI/128, Math.PI/196, Math.PI/256);
-
-            if (isPressed("forward")) {
-                object.translate(10, 0, 0);
-            }
-            if (isPressed("backward")) {
-                object.translate(-10, 0, 0);
-            }
-            if (isPressed("left")) {
-                object.translate(0, 10, 0);
-            }
-            if (isPressed("right")) {
-                object.translate(0, -10, 0);
-            }
-            if (isPressed("up")) {
-                object.translate(0, 0, 10);
-            }
-            if (isPressed("down")) {
-                object.translate(0, 0, -10);
-            }
-
-            if (isPressed("rotateX")) {
-                object.rotate(Math.PI/32, 0, 0);
-            }
-            if (isPressed("rotateY")) {
-                object.rotate(0, Math.PI/32, 0);
-            }
-            if (isPressed("rotateZ")) {
-                object.rotate(0, 0, Math.PI/32);
-            }
-
-        }
-
-        window.getFrame().dispose();
+        window = new Window(this, espace, camera, FPS_LIMIT);
     }
 
     /**
      * Configure the settings.
      */
-    private void configure() {
+    private void configureSettings() {
         settings.put("forward", KeyEvent.VK_Z);
         settings.put("backward", KeyEvent.VK_S);
         settings.put("left", KeyEvent.VK_Q);
@@ -145,6 +104,25 @@ public class App {
         for (Integer key: settings.values()) {
             keyPressed.put(key, false);
         }
+    }
+
+    /**
+     * Run the application.
+     */
+    private void run() {
+        window.start();
+        window.getFrame().setSize(new Dimension(1440, 960));
+        
+        while (isRunning()) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+            }
+            handleKeyboard();
+            espace.getObjects().get(0).rotate(Math.PI/1024, Math.PI/1024, Math.PI/1024);
+        }
+
+        window.getFrame().dispose();
     }
 
     /**
@@ -163,6 +141,30 @@ public class App {
      */
     public void setPressed(Integer key, Boolean pressed) {
         keyPressed.put(key, pressed);
+    }
+
+    /**
+     * Handle the pressured keys.
+     */
+    public void handleKeyboard() {
+        if (isPressed("forward")) {
+            camera.translate(10, 0, 0);
+        }
+        if (isPressed("backward")) {
+            camera.translate(-10, 0, 0);
+        }
+        if (isPressed("left")) {
+            camera.translate(0, 10, 0);
+        }
+        if (isPressed("right")) {
+            camera.translate(0, -10, 0);
+        }
+        if (isPressed("up")) {
+            camera.translate(0, 0, 10);
+        }
+        if (isPressed("down")) {
+            camera.translate(0, 0, -10);
+        }
     }
 
     /**

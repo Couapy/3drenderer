@@ -65,6 +65,8 @@ public class Window extends Thread {
         this.app = app;
         this.espace = espace;
         this.camera = camera;
+
+        initialize();
     }
 
     /**
@@ -107,8 +109,8 @@ public class Window extends Thread {
         frame.addComponentListener(new WindowResizeController(this));
         frame.addKeyListener(new KeyboardController(app));
         frame.addMouseListener(new MouseController());
-        frame.addMouseMotionListener(new MouseMotionController());
-        frame.addMouseWheelListener(new MouseWheelController());
+        frame.addMouseMotionListener(new MouseMotionController(camera));
+        frame.addMouseWheelListener(new MouseWheelController(app));
         frame.setTransferHandler(new FileDropController(espace));
     }
     
@@ -117,7 +119,6 @@ public class Window extends Thread {
      */
     @Override
     public void run() {
-        initialize();
         frame.setVisible(true);
         while (app.isRunning()) {
             try {

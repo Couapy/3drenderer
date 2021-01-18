@@ -40,10 +40,7 @@ public class Matrix {
      * @param matrixB matrix on the right
      * @return result of the multiplication of matrixA by matrixB
      */
-    protected static double[][] multiply(double[][] matrixA, double[][] matrixB) {
-        if (matrixA[0].length != matrixB.length) {
-            return null;
-        }
+    public static double[][] multiply(double[][] matrixA, double[][] matrixB) {
         double[][] result = new double[matrixA.length][matrixB[0].length];
         for (int x = 0; x < result.length; x++) {
             for (int y = 0; y < result[0].length; y++) {
