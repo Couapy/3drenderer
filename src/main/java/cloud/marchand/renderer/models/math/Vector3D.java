@@ -75,20 +75,15 @@ public class Vector3D extends Matrix {
      * @param rotationZ radians angle to rotate the point by z
      */
     public void rotate(Vector3D origin, double rotationX, double rotationY, double rotationZ) {
-        double matrix[][] = { { getX() - origin.getX() }, { getY() - origin.getY() }, { getZ() - origin.getZ() }, };
-        double result[][] = matrix;
-
-        result[0][0] -= origin.getX();
-        result[1][0] -= origin.getY();
-        result[2][0] -= origin.getZ();
+        translate(-origin.getX(), -origin.getY(), -origin.getZ());
 
         if (rotationX != 0d) {
             double rotXmatrix[][] = {
                 {1d, 0d, 0d},
-                {0d, Math.cos(rotationX), -1d * Math.sin(rotationX)},
-                {0d, Math.sin(rotationX),  Math.sin(rotationX)}
+                {0d, Math.cos(rotationX), -Math.sin(rotationX)},
+                {0d, Math.sin(rotationX),  Math.cos(rotationX)}
             };
-            result = multiply(rotXmatrix, result);
+            matrix = multiply(rotXmatrix, matrix);
         }
         if (rotationY != 0d) {
             double rotYmatrix[][] = {
@@ -96,24 +91,18 @@ public class Vector3D extends Matrix {
                 {0d, 1d, 0d},
                 {-1d * Math.sin(rotationY), 0d,  Math.cos(rotationY)}
             };
-            result = multiply(rotYmatrix, result);
+            matrix = multiply(rotYmatrix, matrix);
         }
         if (rotationZ != 0d) {
             double rotZmatrix[][] = {
-                {Math.cos(rotationZ), -1d * Math.sin(rotationZ), 0d},
-                {Math.sin(rotationZ),  Math.sin(rotationZ), 0d},
+                {Math.cos(rotationZ), -Math.sin(rotationZ), 0d},
+                {Math.sin(rotationZ),  Math.cos(rotationZ), 0d},
                 {0d, 0d, 1d}
             };
-            result = multiply(rotZmatrix, result);
+            matrix = multiply(rotZmatrix, matrix);
         }
 
-        result[0][0] += origin.getX();
-        result[1][0] += origin.getY();
-        result[2][0] += origin.getZ();
-
-        setX(result[0][0]);
-        setY(result[1][0]);
-        setZ(result[2][0]);
+        translate(origin.getX(), origin.getY(), origin.getZ());
     }
 
     /**
@@ -185,6 +174,13 @@ public class Vector3D extends Matrix {
      */
     public void setZ(double z) {
         matrix[2][0] = z;
+    }
+
+    public boolean equals(Vector3D vector) {
+        if (matrix[0][0] == vector.getX() && matrix[1][0] == vector.getY() && matrix[2][0] == vector.getZ()) {
+            return true;
+        }
+        return false;
     }
 
     /**

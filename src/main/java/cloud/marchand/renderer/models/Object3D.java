@@ -67,7 +67,6 @@ public class Object3D {
         for (int i = 0; i < nodes.length; i++) {
            nodes[i].rotate(centralPoint, rotationX, rotationY, rotationZ);
         }
-        centralPoint.rotate(centralPoint, rotationX, rotationY, rotationZ);
     }
 
     /**
