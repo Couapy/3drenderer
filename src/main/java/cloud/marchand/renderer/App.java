@@ -72,15 +72,15 @@ public class App {
 
         // Create 3D espace
         espace = new Espace3D();
-        camera = new Camera(new Vector3D(1000, 1000, 1000), 90, 90, 90);
+        camera = new Camera(new Vector3D(300, 300, 10000), 90, 90, 90);
         Object3D object;
         try {
             object = ResourceLoader.getObject("objects/ship.obj");
-            object.scale(0.1d);
+            object.scale(100d);
         } catch (Exception e) {
             object = new Parallelepiped(300, 150, 200);
-            e.printStackTrace();
         }
+        object.translate(300, 300, 0);
         espace.addObject(object);
 
         // Create visualizer

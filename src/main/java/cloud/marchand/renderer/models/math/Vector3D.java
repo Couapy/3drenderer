@@ -129,6 +129,14 @@ public class Vector3D extends Matrix {
     }
 
     /**
+     * Give the length of the vector.
+     * @return the length of the vector
+     */
+	public double length() {
+		return this.distance(new Vector3D(0, 0, 0));
+    }
+
+    /**
      * Give the value x of the vector.
      * @return x composant
      */
@@ -190,4 +198,5 @@ public class Vector3D extends Matrix {
     public String toString() {
         return String.format("(%02.2f, %02.2f, %02.2f)", matrix[0][0], matrix[1][0], matrix[2][0]);
     }
+
 }

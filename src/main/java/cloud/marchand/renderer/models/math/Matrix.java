@@ -64,6 +64,18 @@ public class Matrix {
     }
 
     /**
+     * Multiply each cell of the matrix by a coefficient.
+     * @param coefficient multiplication factor
+     */
+    public void multiply(double coefficient) {
+        for (int x = 0; x < matrix.length; x++) {
+            for (int y = 0; y < matrix[0].length; y++) {
+                matrix[x][y] *= coefficient;
+            }
+        }
+    }
+
+    /**
      * Give the matrix
      * @return the matrix
      */

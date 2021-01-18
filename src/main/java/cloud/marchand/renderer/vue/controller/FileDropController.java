@@ -50,13 +50,14 @@ public class FileDropController extends TransferHandler {
         for (File file : files) {
             try {
                 Object3D object = ResourceLoader.getObjectFromFile(file);
+                espace.getObjects().clear();
                 espace.addObject(object);
+                object.scale(50);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         return true;
     }
-    
-    
+
 }

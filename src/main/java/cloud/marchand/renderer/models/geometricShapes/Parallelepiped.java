@@ -55,15 +55,15 @@ public class Parallelepiped extends Object3D {
      */
     private void defineFaces() {
         faces = new Face3D[]{
-            new Face3D(nodes[0], nodes[1], nodes[2]),
-            new Face3D(nodes[0], nodes[2], nodes[3]),
-            new Face3D(nodes[0], nodes[4], nodes[5]),
+            new Face3D(nodes[0], nodes[2], nodes[1]),
+            new Face3D(nodes[0], nodes[3], nodes[2]),
+            new Face3D(nodes[0], nodes[5], nodes[4]),
             new Face3D(nodes[0], nodes[1], nodes[5]),
             new Face3D(nodes[1], nodes[2], nodes[5]),
-            new Face3D(nodes[2], nodes[5], nodes[6]),
-            new Face3D(nodes[2], nodes[6], nodes[7]),
+            new Face3D(nodes[2], nodes[6], nodes[5]),
+            new Face3D(nodes[2], nodes[7], nodes[6]),
             new Face3D(nodes[2], nodes[3], nodes[7]),
-            new Face3D(nodes[0], nodes[3], nodes[7]),
+            new Face3D(nodes[0], nodes[7], nodes[3]),
             new Face3D(nodes[0], nodes[4], nodes[7]),
             new Face3D(nodes[4], nodes[5], nodes[7]),
             new Face3D(nodes[5], nodes[6], nodes[7])

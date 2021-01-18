@@ -2,8 +2,9 @@ package cloud.marchand.renderer.vue.overlays;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import cloud.marchand.renderer.interfaces.Overlay;
@@ -15,63 +16,121 @@ import cloud.marchand.renderer.models.math.Matrix;
 import cloud.marchand.renderer.models.math.Vector3D;
 
 /**
- * TODO Pour afficher l'espace 3D : * Déterminer les éléments qui sont
- * affichables à l'écran * Déterminer les faces à afficher à l'écran *
- * Déterminer les faces en premier plan * Afficher toutes les faces à l'écran
+ * TODO Pour afficher l'espace 3D :
+ * Déterminer les éléments qui sont affichables à l'écran 
  */
 public class SkeletonDrawing extends Overlay {
 
-    private static final int NODE_THICKNESS = 5;
+    private class SortByDistance implements Comparator<Face3D> {
 
-    private static final Color NODE_COLOR = Color.GREEN;
+        @Override
+        public int compare(Face3D face1, Face3D face2) {
+            Vector3D[] nodes1, nodes2;
+            double face1DistanceAverage, face2DistanceAverage;
+
+            nodes1 = face1.getNodes();
+            face1DistanceAverage = 0d;
+            for (int i = 0; i < nodes1.length; i++) {
+                face1DistanceAverage += nodes1[i].distance(camera);
+            }
+            face1DistanceAverage /= nodes1.length;
+
+            nodes2 = face2.getNodes();
+            face2DistanceAverage = 0d;
+            for (int i = 0; i < nodes2.length; i++) {
+                face2DistanceAverage += nodes2[i].distance(camera);
+            }
+            face2DistanceAverage /= nodes2.length;
+
+            if (face1DistanceAverage < face2DistanceAverage) {
+                return 1;
+            }
+            else if (face1DistanceAverage < face2DistanceAverage) {
+                return -1;
+            }
+            return 0;
+        }
+        
+    }
+
     private static final Color LINK_COLOR = Color.MAGENTA;
-    private static final Color FACE_COLOR = Color.DARK_GRAY;
+    private static final int FACE_COLOR = 255;
+
+    private Camera camera;
+    private Espace3D espace;
 
     @Override
     public void draw(Graphics graphics, Espace3D espace, Camera camera) {
+        this.espace = espace;
+        this.camera = camera;
         Iterator<Object3D> iterator = espace.getObjects().iterator();
         while (iterator.hasNext()) {
             Object3D object = iterator.next();
-            drawObject(graphics, object, camera);
+            drawObject(graphics, object);
         }
     }
 
-    private void drawObject(Graphics graphics, Object3D object, Camera camera) {
-        Vector3D[] nodes = object.getNodes();
+    private void drawObject(Graphics graphics, Object3D object) {
+        /**
+         * Get projected faces
+         * Sort projected faces
+         * Draw projected faces
+         */
+
+        // Get projected faces
         Face3D[] faces = object.getFaces();
-
+        Vector3D[][] projectedFaces = new Vector3D[faces.length][3];
         for (int i = 0; i < faces.length; i++) {
-            drawFace(graphics, faces[i], camera);
+            Vector3D[] nodes = faces[i].getNodes();
+            for (int j = 0; j < nodes.length; j++) {
+                projectedFaces[i][j] = getIntersectionCamera(graphics, nodes[j]);
+            }
         }
 
-        graphics.setColor(NODE_COLOR);
-        for (int i = 0; i < nodes.length; i++) {
-            Point pointcamera = getIntersectionCamera(graphics, nodes[i], camera);
-            graphics.drawOval((int) pointcamera.getX() - NODE_THICKNESS / 2,
-                    (int) pointcamera.getY() - NODE_THICKNESS / 2, NODE_THICKNESS, NODE_THICKNESS);
+        // Sort projected faces
+        Arrays.sort(faces, new SortByDistance());
+
+        // Draw faces
+        for (int i = 0; i < projectedFaces.length; i++) {
+            if (!faces[i].isVisible(camera)) {
+                continue;
+            }
+            Vector3D[] nodes = faces[i].getNodes();
+            int[] xPoints = new int[nodes.length];
+            int[] yPoints = new int[nodes.length];
+    
+            for (int j = 0; j < nodes.length; j++) {
+                Vector3D point = getIntersectionCamera(graphics, nodes[j]);
+                xPoints[j] = (int) point.getX();
+                yPoints[j] = (int) point.getY();
+            }
+
+            int color = FACE_COLOR;
+            Vector3D light = espace.getLightDirection();
+            Vector3D faceNormal = faces[i].getNormal();
+            double product = faceNormal.getX() * light.getX() + faceNormal.getX() * light.getY() + faceNormal.getZ() * light.getZ();
+            color *= product;
+            if (color > 255) {
+                color = 255;
+            }
+            else if (color < 0) {
+                color = 0;
+            }
+
+            graphics.setColor(new Color(color, color, color));
+            graphics.fillPolygon(xPoints, yPoints, nodes.length);
+            graphics.setColor(LINK_COLOR);
+            graphics.drawPolygon(xPoints, yPoints, nodes.length);
         }
     }
 
-    private void drawFace(Graphics graphics, Face3D face, Camera camera) {
-        Vector3D[] nodes = face.getNodes();
-        int[] xPoints = new int[nodes.length];
-        int[] yPoints = new int[nodes.length];
-
-        for (int i = 0; i < nodes.length; i++) {
-            Point point = getIntersectionCamera(graphics, nodes[i], camera);
-            xPoints[i] = (int) point.getX();
-            yPoints[i] = (int) point.getY();
-        }
-
-        int color = 70;
-
-        graphics.setColor(new Color(color, color, color));
-        graphics.fillPolygon(xPoints, yPoints, nodes.length);
-        graphics.setColor(LINK_COLOR);
-        graphics.drawPolygon(xPoints, yPoints, nodes.length);
-    }
-
-    private Point getIntersectionCamera(Graphics graphics, Vector3D point, Camera camera) {
+    /**
+     * Give the projection point of a point.
+     * @param graphics drawing
+     * @param point 3D point
+     * @return 2D projection
+     */
+    private Vector3D getIntersectionCamera(Graphics graphics, Vector3D point) {
         Rectangle graphicsBounds = graphics.getClipBounds();
 
         // Vector3D p = new Vector3D(point.getX(), point.getY(), point.getZ());
@@ -141,7 +200,7 @@ public class SkeletonDrawing extends Overlay {
             { point.getZ() },
             { point.distance(camera) }
         };
-        double [][] result = Matrix.multiply(newPoint, projection);
+        double[][] result = Matrix.multiply(newPoint, projection);
 
         // Essai 1
 
@@ -153,7 +212,7 @@ public class SkeletonDrawing extends Overlay {
         //     {0, alpha, 0}
         // };
         // double[][] result = point.multiply(projection);
-        return new Point((int) (result[0][0] * 1000 + 200), (int) (result[1][0] * 1000 + 200));
+        return new Vector3D(result[0][0], result[1][0], result[2][0]);
     }
     
 }

@@ -32,4 +32,48 @@ public class Face3D {
         return nodes;
     }
 
+    /**
+     * Calculate the normal vector of the face
+     * @return the normal
+     */
+	public Vector3D getNormal() {
+        double[] line1, line2;
+
+        line1 = new double[] {
+            nodes[1].getX() - nodes[0].getX(),
+            nodes[1].getY() - nodes[0].getY(),
+            nodes[1].getZ() - nodes[0].getZ()
+        };
+        line2 = new double[] {
+            nodes[2].getX() - nodes[0].getX(),
+            nodes[2].getY() - nodes[0].getY(),
+            nodes[2].getZ() - nodes[0].getZ()
+        };
+        double[] normal = new double[]{
+            line1[1] * line2[2] - line1[2] * line2[1],
+            line1[2] * line2[0] - line1[0] * line2[2],
+            line1[0] * line2[1] - line1[1] * line2[0]
+        };
+        Vector3D normalVector = new Vector3D(normal[0], normal[1], normal[2]);
+        normalVector.multiply(1/normalVector.length());
+        return normalVector;
+	}
+
+    /**
+     * Indicates if the face if visible.
+     * @param camera point of view
+     * @return true if the face is visible
+     */
+	public boolean isVisible(Camera camera) {
+        Vector3D normal = getNormal();
+        // double vectorProduct = normal.getX() * (nodes[0].getX() - camera.getX()) +
+        //                        normal.getY() * (nodes[0].getY() - camera.getY()) +
+        //                        normal.getZ() * (nodes[0].getZ() - camera.getZ());
+        // if (vectorProduct < 0.0d) {
+        if (normal.getZ() < 0.0d) {
+            return true;
+        }
+        return false;
+	}
+
 }
